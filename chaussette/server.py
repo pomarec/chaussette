@@ -9,6 +9,9 @@ from chaussette import logger as chaussette_logger
 from chaussette.util import import_string, configure_logger, LOG_LEVELS
 from chaussette.backend import get, backends
 
+from gevent import monkey
+monkey.noisy = False
+monkey.patch_all()
 
 def make_server(app, host=None, port=None, backend='wsgiref', backlog=2048,
                 spawn=None, logger=None, address_family=socket.AF_INET,

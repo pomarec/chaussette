@@ -1,6 +1,9 @@
 from gevent import monkey
 
 import socket
+import gevent
+import signal
+from functools import partial
 from gevent.pywsgi import WSGIServer, WSGIHandler
 from chaussette.util import create_socket
 
@@ -39,3 +42,5 @@ class Server(WSGIServer):
         super(Server, self).__init__(self.socket, application, None, spawn,
                                      log, self.handler_class, environ,
                                      **ssl_args)
+
+        gevent.signal(signal.SIGHUP, partial(self.stop, timeout = 10000))
