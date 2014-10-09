@@ -9,6 +9,12 @@ from geventwebsocket.handler import WebSocketHandler
 from chaussette.util import create_socket
 
 
+class CustomWebSocketHandler(WebSocketHandler):
+    def log_request(self):
+        if isinstance(self.code, (int, long)) and 400 <= self.code <= 599:
+            WebSocketHandler.log_request(self)
+
+
 class Server(WSGIServer):
 
     address_family = socket.AF_INET
@@ -24,7 +30,7 @@ class Server(WSGIServer):
         self.socket_type = socket_type
 
         host, port = listener
-        self.handler_class = WebSocketHandler
+        self.handler_class = CustomWebSocketHandler
         self.socket = create_socket(host, port, self.address_family,
                                     self.socket_type, backlog=backlog)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

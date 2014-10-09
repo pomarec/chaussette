@@ -14,6 +14,10 @@ class CustomWSGIHandler(WSGIHandler):
             address = ['0.0.0.0']
         WSGIHandler.__init__(self, sock, address, server, rfile)
 
+    def log_request(self):
+        if isinstance(self.code, (int, long)) and 400 <= self.code <= 599:
+            WSGIHandler.log_request(self)
+
 
 class Server(WSGIServer):
 
